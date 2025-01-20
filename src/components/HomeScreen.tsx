@@ -1,21 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import AllItem from './AllItem';
+import CreateScreen from './CreateScreen';
+
+
 
 const HomeScreen: React.FC = () => {
+  const [view, setView] = useState<number>(0);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Deshboard</Text>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button}>
-          <Text style={styles.btnText}>All Item</Text>
+        <Pressable style={[styles.button, view === 0 ? { backgroundColor: 'green' } : null]}
+          onPress={() => setView(0)}>
+          <Text style={[styles.btnText, view === 0 ? { color: 'white' } : null]}>All Item</Text>
         </Pressable>
-        <Pressable style={styles.button}>
-          <Text style={styles.btnText}>Low Stock</Text>
+        <Pressable style={[styles.button, view === 1 ? { backgroundColor: 'green' } : null]}
+          onPress={() => setView(1)}>
+          <Text style={[styles.btnText, view === 1 ? { color: 'white' } : null]}>Low Stock</Text>
         </Pressable>
-        <Pressable style={styles.button}>
-          <Text style={styles.btnText}>Create</Text>
+        <Pressable style={[styles.button, view === 2 ? { backgroundColor: 'green' } : null]}
+          onPress={() => setView(2)}>
+          <Text style={[styles.btnText, view === 2 ? { color: 'white' } : null]}>Create</Text>
         </Pressable>
       </View>
+
+      {view === 0 && <AllItem />}
+      {view === 1 && <AllItem />}
+      {view === 2 && <CreateScreen />}
     </SafeAreaView>
   );
 };
