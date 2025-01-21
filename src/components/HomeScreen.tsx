@@ -17,7 +17,7 @@ interface Item{
 const data: Item[] = [
   { id: 1, name: "English", stock: 5 },
   { id: 2, name: "Science", stock: 15, },
-  { id: 3, name: "Mathematics", stock: 25},
+  { id: 3, name: "Mathematics", stock: 9},
   { id: 4, name: "Chemistry", stock: 50},
   { id: 5, name: "Physics", stock: 19},
 ];
@@ -44,7 +44,7 @@ const HomeScreen: React.FC = () => {
       </View>
 
       {view === 0 && <AllItem  data={data}/>}
-      {/* {view === 1 && <AllItem />} */}
+      {view === 1 && <AllItem  data={data.filter((item) => item.stock < 10)} />}
       {view === 2 && <CreateScreen />}
     </SafeAreaView>
   );
