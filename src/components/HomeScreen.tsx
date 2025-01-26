@@ -45,7 +45,7 @@ const HomeScreen: React.FC = () => {
 
       {view === 0 && <AllItem  data={data}/>}
       {view === 1 && <AllItem  data={data.filter((item) => item.stock < 10)} />}
-      {view === 2 && <CreateScreen />}
+      {view === 2 && <CreateScreen data={data} />}
     </SafeAreaView>
   );
 };

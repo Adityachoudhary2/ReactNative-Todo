@@ -1,7 +1,18 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
-import { useState } from 'react'
+import {FlatList, StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
+import React, { useState } from 'react'
 
-const CreateScreen = () => {
+
+type Item ={
+  id:number;
+  name:string;
+  stock:number;
+};
+
+type CreateScreenProps ={
+  data: Item[];
+}
+
+const CreateScreen: React.FC<CreateScreenProps> = ({data}) => {
   const [itemName, setItemName] = useState<string>('')
   const [stockAmt, setStockAmt] = useState<string>('')
 
@@ -22,6 +33,29 @@ const CreateScreen = () => {
       <Pressable style={styles.button}>
         <Text style={styles.btnText}>ADD ITEM IN STOCK</Text>
       </Pressable>
+
+      <View>
+           <View style={styles.headingContainer}>
+              <Text style={styles.headingtext}>Items</Text>
+              <Text style={styles.headingtext}>Quantity</Text>
+            </View>
+            <FlatList
+              data={data}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View
+                  style={[
+                    styles.itemContainer,
+                    { backgroundColor: item.stock < 10 ? "#FFCCCC" : "#D7F6BFFF" },
+                  ]}
+                >
+                  <Text style={styles.itemtext}>{item.name}</Text>
+                  <Text style={styles.itemtext}>{item.stock}</Text>
+                </View>
+              )}
+              contentContainerStyle={{ gap: 10 }}
+            />
+          </View>
 
     </View>
   )
@@ -54,5 +88,26 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     fontSize: 15,
-  }
+  },
+  headingContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  headingtext: {
+    fontWeight: "500",
+    fontSize: 16,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 7,
+  },
+  itemtext: {
+    fontWeight: "400",
+    fontSize: 15,
+  },
 })
