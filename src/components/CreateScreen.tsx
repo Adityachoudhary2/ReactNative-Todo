@@ -1,24 +1,24 @@
-import {FlatList, StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
+import { FlatList, StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
 import React, { useState } from 'react'
 
 
-type Item ={
-  id:number;
-  name:string;
-  stock:number;
+type Item = {
+  id: number;
+  name: string;
+  stock: number;
 };
 
-type CreateScreenProps ={
+type CreateScreenProps = {
   data: Item[];
   setdata: React.Dispatch<React.SetStateAction<Item[]>>
 }
 
-const CreateScreen: React.FC<CreateScreenProps> = ({data, setdata}) => {
+const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
   const [itemName, setItemName] = useState<string>('')
   const [stockAmt, setStockAmt] = useState<string>('')
 
-  const AddItemhandle =()=>{
-    const newDataItem: Item ={
+  const AddItemhandle = () => {
+    const newDataItem: Item = {
       id: Date.now(),
       name: itemName,
       stock: parseInt(stockAmt),
@@ -26,6 +26,11 @@ const CreateScreen: React.FC<CreateScreenProps> = ({data, setdata}) => {
     setdata([...data, newDataItem])
     setItemName('')
     setStockAmt("")
+  }
+
+  const deleteItemHandler =(id: number)=>{
+     setdata(data.filter((item)=> item.id !== id))
+
   }
 
   return (
@@ -47,26 +52,31 @@ const CreateScreen: React.FC<CreateScreenProps> = ({data, setdata}) => {
       </Pressable>
 
       <View>
-           <View style={styles.headingContainer}>
-              <Text style={styles.headingtext}>All Items in the stock</Text>
+        <View style={styles.headingContainer}>
+          <Text style={styles.headingtext}>All Items in the stock</Text>
+        </View>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.itemContainer,
+                { backgroundColor: item.stock < 10 ? "#FFCCCC" : "#D7F6BFFF" },
+              ]}
+            >
+              <Text style={styles.itemtext}>{item.name}</Text>
+              <View style={{flexDirection:"row", gap:10}}>
+                <Text style={styles.itemtext}>{item.stock}</Text>
+                <Pressable onPress={()=> deleteItemHandler(item.id)}>
+                <Text style={styles.itemtext}>Delete</Text>
+                </Pressable>
+              </View>
             </View>
-            <FlatList
-              data={data}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View
-                  style={[
-                    styles.itemContainer,
-                    { backgroundColor: item.stock < 10 ? "#FFCCCC" : "#D7F6BFFF" },
-                  ]}
-                >
-                  <Text style={styles.itemtext}>{item.name}</Text>
-                  <Text style={styles.itemtext}>{item.stock}</Text>
-                </View>
-              )}
-              contentContainerStyle={{ gap: 10 }}
-            />
-          </View>
+          )}
+          contentContainerStyle={{ gap: 10 }}
+        />
+      </View>
 
     </View>
   )
@@ -93,7 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: "center",
     alignItems: "center",
-    
+
   },
   btnText: {
     color: "white",
