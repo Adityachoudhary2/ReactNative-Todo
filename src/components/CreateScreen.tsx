@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
+import { FlatList, StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native'
 import React, { useState } from 'react'
 
 
@@ -19,7 +19,23 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
   const [isEdit, setisEdit] = useState<boolean>(false)
   const [editItemId, seteditItemId] = useState<number | null>(null)
 
+  const validateInputs =()=>{
+    if(!itemName.trim()){
+      Alert.alert('Validation Error', 'Item name cannot be empty.');
+      return false;
+
+    }
+    if(!stockAmt.trim()|| isNaN(Number(stockAmt)) || Number(stockAmt) <=0){
+      Alert.alert('Validation Error', 'Stock amount must be a positive number.');
+      return false;
+
+    }
+    return true;
+  }
+
   const AddItemhandle = () => {
+    if(!validateInputs()) return;
+    
     const newDataItem: Item = {
       id: Date.now(),
       name: itemName,
