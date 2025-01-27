@@ -10,11 +10,23 @@ type Item ={
 
 type CreateScreenProps ={
   data: Item[];
+  setdata: React.Dispatch<React.SetStateAction<Item[]>>
 }
 
-const CreateScreen: React.FC<CreateScreenProps> = ({data}) => {
+const CreateScreen: React.FC<CreateScreenProps> = ({data, setdata}) => {
   const [itemName, setItemName] = useState<string>('')
   const [stockAmt, setStockAmt] = useState<string>('')
+
+  const AddItemhandle =()=>{
+    const newDataItem: Item ={
+      id: Date.now(),
+      name: itemName,
+      stock: parseInt(stockAmt),
+    }
+    setdata([...data, newDataItem])
+    setItemName('')
+    setStockAmt("")
+  }
 
   return (
     <View style={styles.container}>
@@ -30,14 +42,13 @@ const CreateScreen: React.FC<CreateScreenProps> = ({data}) => {
         value={stockAmt}
         onChangeText={(item: string) => setStockAmt(item)}
       />
-      <Pressable style={styles.button}>
+      <Pressable style={styles.button} onPress={AddItemhandle}>
         <Text style={styles.btnText}>ADD ITEM IN STOCK</Text>
       </Pressable>
 
       <View>
            <View style={styles.headingContainer}>
-              <Text style={styles.headingtext}>Items</Text>
-              <Text style={styles.headingtext}>Quantity</Text>
+              <Text style={styles.headingtext}>All Items in the stock</Text>
             </View>
             <FlatList
               data={data}
