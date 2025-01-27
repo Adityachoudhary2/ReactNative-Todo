@@ -16,6 +16,8 @@ type CreateScreenProps = {
 const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
   const [itemName, setItemName] = useState<string>('')
   const [stockAmt, setStockAmt] = useState<string>('')
+  const [isEdit, setisEdit] = useState<boolean>(false)
+  const [editItemId, seteditItemId] = useState<number | null>(null)
 
   const AddItemhandle = () => {
     const newDataItem: Item = {
@@ -26,29 +28,51 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
     setdata([...data, newDataItem])
     setItemName('')
     setStockAmt("")
+    setisEdit(false)
   }
 
-  const deleteItemHandler =(id: number)=>{
-     setdata(data.filter((item)=> item.id !== id))
+  const deleteItemHandler = (id: number) => {
+    setdata(data.filter((item) => item.id !== id))
 
+  }
+  const editItemHandler = (item: Item) => {
+    setisEdit(true);
+    setItemName(item.name);
+    seteditItemId(item.id);
+
+  };
+
+  const updateItemHandler = () => {
+    setdata(
+      data.map((item) =>
+        item.id === editItemId
+          ? { ...item, name: itemName, stock: parseInt(stockAmt) }
+          : item
+      )
+    );
+    setItemName('');
+    setStockAmt('');
+    seteditItemId(null);
   }
 
   return (
     <View style={styles.container}>
       <TextInput
         placeholder='Enter an item name...'
+        placeholderTextColor="#999"
         style={styles.input}
         value={itemName}
         onChangeText={(item: string) => setItemName(item)}
       />
       <TextInput
         placeholder='Enter stock amount'
+        placeholderTextColor="#999"
         style={styles.input}
         value={stockAmt}
         onChangeText={(item: string) => setStockAmt(item)}
       />
-      <Pressable style={styles.button} onPress={AddItemhandle}>
-        <Text style={styles.btnText}>ADD ITEM IN STOCK</Text>
+      <Pressable style={styles.button} onPress={() => (isEdit ? updateItemHandler() :AddItemhandle())}>
+        <Text style={styles.btnText}>{isEdit ? 'Edit ITEM IN STOCK' : 'ADD ITEM IN STOCK'}</Text>
       </Pressable>
 
       <View>
@@ -66,10 +90,13 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
               ]}
             >
               <Text style={styles.itemtext}>{item.name}</Text>
-              <View style={{flexDirection:"row", gap:10}}>
+              <View style={{ flexDirection: "row", gap: 10 }}>
                 <Text style={styles.itemtext}>{item.stock}</Text>
-                <Pressable onPress={()=> deleteItemHandler(item.id)}>
-                <Text style={styles.itemtext}>Delete</Text>
+                <Pressable onPress={() => editItemHandler(item)}>
+                  <Text style={styles.itemtext}>Edit</Text>
+                </Pressable>
+                <Pressable onPress={() => deleteItemHandler(item.id)}>
+                  <Text style={styles.itemtext}>Delete</Text>
                 </Pressable>
               </View>
             </View>
@@ -119,6 +146,7 @@ const styles = StyleSheet.create({
   headingtext: {
     fontWeight: "500",
     fontSize: 16,
+    marginVertical: 10,
   },
   itemContainer: {
     flexDirection: "row",
