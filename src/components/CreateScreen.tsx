@@ -59,6 +59,7 @@ const CreateScreen: React.FC<CreateScreenProps> = ({ data, setdata }) => {
   };
 
   const updateItemHandler = () => {
+    if (!validateInputs()) return;
     setdata(
       data.map((item) =>
         item.id === editItemId
